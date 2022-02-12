@@ -15,26 +15,17 @@
 <body>
     <canvas id="myCanvas" width="1200" height="550"></canvas>
     <div class="container">
-        <h2>数値の入力</h2>
             <form id="ajax-number" action="{% url 'main:ajax_number' %}" method="POST">
                 {% csrf_token %}
-                <input type="number" id="number1" required>
-                <input type="number" id="number2" required>
-                <input type="number" id="the_poyota" required>
-                <button type="submit" >計算</button>
+                <button type="submit" >送信</button>
             </form>
-            
-        <h2>数値の計算</h2>
         <div class="result">
-        </div>
-        <h1>====POYOTA====</h1>
-        <div class="poyotaEX">
         </div>
     </div>
 
 
     <script>
-        //#######  ajax ひつようなぶぶん  #######
+        //#######  ajax POST and Response  #######
         var csrftoken = getCookie('csrftoken');
         $('#ajax-number').on('submit', function(e) {
             e.preventDefault();
@@ -42,19 +33,18 @@
             $.ajax({
                 'url': '{% url "main:ajax_number" %}',
                 'type': 'POST',
+                traditional : true,
                 'data': {
-                    'number1': $('#number1').val(),
-                    'number2': $('#number2').val(),
-                    'poyota': $('#the_poyota').val(),
-                    'supernova': seq_list,
+                    'nodes': JSON.stringify(nodes),
+                    'seq_cluster': JSON.stringify(seq_cluster),
                 },
                 'dataType': 'json'
             })
             .done(function(response){
                 console.log('passed!')
-                $('.result').prepend('<p>引き算結果：' + response.minus + '</p>');
-                $('.result').prepend('<p>足し算結果：' + response.plus + '</p>');
-                $('.poyotaEX').prepend('<p>[THE POYOTA IS...  ' + response.poyota + ']</p>');
+                $('.result').prepend('<p>ああああ：' + response.a + '</p>');
+                $('.result').prepend('<p>いいいい：' + response.b + '</p>');
+                $('.result').prepend('<p>こんにちは　is ：' + response.c + '</p>');
             });
         });
         //######################################
