@@ -12,6 +12,8 @@
     <script>
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
+        var pre_x 
+        var pre_y
         var x = canvas.width/2;
         var y = canvas.height/2;
         var move = 80
@@ -24,8 +26,12 @@
         var arrow_transparency = 0.2;
         var charcluster = []
         var linecluster = []
+        var lineall = [];
         var charlist = [];
         var linelist = [];
+        var mode = 0
+        var mode_now = 0;
+        const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         var arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
         'n','o','p','q','r','s','t','u','v','w','x','y','z',
         'A','B','C','D','E','F','G','H','I','J','K','L','M', 
@@ -37,6 +43,7 @@
         function mode1(e){
             if(e.code  == "ArrowRight") {
                 linelist.push([x,y]);
+                lineall.push([x,y]);
                 x += move;
                 charlist.push(char);
                 char = '';
@@ -44,6 +51,7 @@
             }
             else if(e.code == 'ArrowLeft') {
                 linelist.push([x,y]);
+                lineall.push([x,y]);
                 x -= move;
                 charlist.push(char);
                 char = '';
@@ -51,6 +59,7 @@
             }
             else if(e.code == 'ArrowUp') {
                 linelist.push([x,y]);
+                lineall.push([x,y]);
                 y -= move;
                 charlist.push(char);
                 char = '';
@@ -58,6 +67,7 @@
             }
             else if(e.code == 'ArrowDown') {
                 linelist.push([x,y]);
+                lineall.push([x,y]);
                 y += move;
                 charlist.push(char);
                 char = '';
@@ -82,21 +92,29 @@
         }
         function mode2(e){
             if(e.code  == "ArrowRight") {
+                pre_x = x
+                pre_y = y
                 x += move;
             }
             else if(e.code == 'ArrowLeft') {
+                pre_x = x
+                pre_y = y
                 x -= move;
             }
             else if(e.code == 'ArrowUp') {
+                pre_x = x
+                pre_y = y
                 y -= move;
             }
             else if(e.code == 'ArrowDown') {
+                pre_x = x
+                pre_y = y
                 y += move;
             }
         }
         function keyDownHandler(e) {
             //2つのモードを行き来する、切り替わる瞬間に特別な処理を入れる
-            if (linelist.some(item => item[0] === x && item[1] === y)){
+            if (lineall.some(item => item[0] === x && item[1] === y)){
                 if (mode_now == 1){
                     mode_now = 0;
                 }
@@ -105,10 +123,14 @@
             else{
                 if (mode_now == 0){
                     mode_now = 1;
-                    linecluster.push(linelist);
-                    charcluster.push(charlist);
-                    linelist = []
-                    charlist = []
+                    if (linelist.length>0){
+                        linecluster.push(linelist);
+                        charcluster.push(charlist);
+                        linelist = []
+                        charlist = []
+                        linelist.push([pre_x, pre_y])
+                        charlist.push('')
+                    }
                 }
                 mode1(e);
             }
@@ -156,12 +178,12 @@
         }
 
         function draw_all_components() {
-            for (i=0; i<linecluster.length; i++){
-                line_list = linecluster[i];
-                char_list = charcluster[i];
-                draw_list_components(line_list, char_list)
+            for (j=0; j<linecluster.length; j++){
+                line_list = linecluster[j];
+                char_list = charcluster[j];
+                draw_list_components(line_list, char_list);
             }
-            draw_list_components(linelist, charlist)
+            draw_list_components(linelist, charlist);
         }
 
         function drawChar(x, y, char, fontsize) {
@@ -176,43 +198,6 @@
             ctx.closePath();
         }
 
-        function drawArrow1(x,y,near,far) {
-            var transparency = arrow_transparency;
-            ctx.beginPath();
-            ctx.arrow(x+near, y, x+far, y, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near, y, x-far, y, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x, y+near, x, y+far, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x, y-near, x, y-far, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.65, y+near*0.65, x+far*0.65, y+far*0.65, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.65, y+near*0.65, x-far*0.65, y+far*0.65, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.65, y-near*0.65, x+far*0.65, y-far*0.65, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.65, y-near*0.65, x-far*0.65, y-far*0.65, [0, 3, -10, 3, -10, 8]);
-            ctx.strokeStyle = `rgba(0, 0, 0, ${transparency})`;
-            ctx.lineWidth = 1 ;
-            ctx.stroke();
-            ctx.closePath();
-        }
-
-        function drawArrow2(x,y,near,far) {
-            var transparency = arrow_transparency
-            ctx.beginPath();
-            ctx.arrow(x+near, y, x+far, y, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near, y, x-far, y, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x, y+near, x, y+far, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x, y-near, x, y-far, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.8, y+near*0.45, x+far*0.8, y+far*0.45, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.8, y+near*0.45, x-far*0.8, y+far*0.45, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.8, y-near*0.45, x+far*0.8, y-far*0.45, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.8, y-near*0.45, x-far*0.8, y-far*0.45, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.45, y+near*0.8, x+far*0.45, y+far*0.8, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.45, y+near*0.8, x-far*0.45, y+far*0.8, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x+near*0.45, y-near*0.8, x+far*0.45, y-far*0.8, [0, 3, -10, 3, -10, 8]);
-            ctx.arrow(x-near*0.45, y-near*0.8, x-far*0.45, y-far*0.8, [0, 3, -10, 3, -10, 8]);
-            ctx.strokeStyle = `rgba(0, 0, 0, ${transparency})`;
-            ctx.stroke();
-            ctx.closePath();
-        }
-
         function toggle_arrow(){
             if (arrow_mode == 1){
                 drawArrow1(x,y,near,far);
@@ -222,13 +207,14 @@
             }
         }
 
-        function main(){
+        async function main(){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             //drawBall(x,y);
             drawChar(x, y, char, fontsize-3*char.length)
             draw_all_components();
             toggle_arrow(x,y,near,far);
             requestAnimationFrame(main);
+            await _sleep(10);
         }
 
         main();
