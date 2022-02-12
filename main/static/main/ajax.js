@@ -15,7 +15,7 @@ function getCookie(name) {
 }
 
 var csrftoken = getCookie('csrftoken');
-var supernova = [2];
+var supernova = [2,2,2];
 console.log(supernova)
 
 function csrfSafeMethod(method) {
