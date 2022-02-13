@@ -13,9 +13,12 @@ def index(request):
 def ajax_number(request):
     nodes = request.POST.get("nodes")
     seq_cluster = request.POST.get("seq_cluster")
+    direct_cluster = request.POST.get("direct_cluster")
     nodes_dict = json.loads(nodes)
     seq_cluster_dict = json.loads(seq_cluster)
-    chem = construct_chemfig_expression(nodes_dict, seq_cluster_dict)
+    direct_cluster_dict = json.loads(direct_cluster) 
+    chem = construct_chemfig_expression(nodes_dict, seq_cluster_dict,
+                                        direct_cluster_dict)
     sentence = make_sentence(chem)
     d = {
         'sentence':repr(sentence)

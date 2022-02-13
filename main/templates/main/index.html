@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>aaa</title>
     <style>* { padding: 0; margin: 0; } canvas { background: #555; display: block; margin: 0 auto; }</style>
+    <script src="{% static 'main/variables.js' %}"></script>
     <script src="{% static 'main/jquery.min.js' %}"></script>
     <script src="{% static 'main/arrow.js' %}"></script>
     <script src="{% static 'main/koushin.js' %}"></script>
@@ -12,6 +13,7 @@
     <script src="{% static 'main/ajax.js' %}"></script>
     <script src="{% static 'main/mode.js' %}"></script>
     <script src="{% static 'main/drawing.js' %}"></script>
+
 </head>
 <body>
     <canvas id="myCanvas" width="1200" height="550"></canvas>
@@ -24,13 +26,11 @@
         </div>
     </div>
 
-
     <script>
         //#######  ajax POST and Response  #######
         var csrftoken = getCookie('csrftoken');
         $('#ajax-number').on('submit', function(e) {
             e.preventDefault();
-
             $.ajax({
                 'url': '{% url "main:ajax_number" %}',
                 'type': 'POST',
@@ -38,6 +38,7 @@
                 'data': {
                     'nodes': JSON.stringify(nodes),
                     'seq_cluster': JSON.stringify(seq_cluster),
+                    'direct_cluster': JSON.stringify(direction_cluster),
                 },
                 'dataType': 'json'
             })
@@ -50,58 +51,18 @@
 
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
-        var idx = 0;
         var x = parseInt(canvas.width/3);
         var y = parseInt(canvas.height/2);
-        var char = '';
-        var pre_x = x;
-        var pre_y = y;
-        var pre_idx = idx;
-        var pre_char = char;
-        var move = 80;
-        var near = 18;
-        var far = 50;
-        var charwrite_flag = 0;
-        var fontsize = 26
-        var arrow_mode = 0;
-        var max_arrow_mode = 2; 
-        var arrow_transparency = 0.5;
-        var arrow_R = 200
-        var arrow_G = 200
-        var arrow_B = 0
-        var mode = 0;
-        var direction;
-        var seq_list = [];
-        var seq_cluster = [];
-        var direction_list = [];
-        var direction_cluster = [];
-        var nodes = {};
-        var pre_mode = 0;
-        var Pressed = [false, false, false, false];
-        var commandable = true;
-        const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-        var arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
-        'n','o','p','q','r','s','t','u','v','w','x','y','z',
-        'A','B','C','D','E','F','G','H','I','J','K','L','M', 
-        'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-        '1','2','3','4','5','6','7','8','9','10','_'];
 
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
 
-
         async function main(){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            //drawBall(x,y);
-            if (mode == 0){
-                drawChar(x, y, char, fontsize-3*char.length)
-            }
             draw_all_components();
-            draw_arrow()
             requestAnimationFrame(main);
-            await _sleep(10);
+            await _sleep(20);
         }
-
         main();
 
     </script>

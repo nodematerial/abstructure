@@ -51,6 +51,12 @@ function draw_list_components(seq_list){
 }
 
 function draw_all_components() {
+    //矢印を描画する
+    draw_arrow()
+    //描画モードの際、現在の座標の元素を描画する
+    if (mode == 0){
+        drawChar(x, y, char, fontsize-3*char.length)
+    }
     if (0 in nodes){
         var cha = nodes[0][2]
         drawChar(nodes[0][0], nodes[0][1], cha, fontsize-3*cha.length);   
