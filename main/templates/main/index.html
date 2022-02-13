@@ -11,6 +11,7 @@
     <script src="{% static 'main/keymap.js' %}"></script>
     <script src="{% static 'main/ajax.js' %}"></script>
     <script src="{% static 'main/mode.js' %}"></script>
+    <script src="{% static 'main/drawing.js' %}"></script>
 </head>
 <body>
     <canvas id="myCanvas" width="1200" height="550"></canvas>
@@ -42,19 +43,17 @@
             })
             .done(function(response){
                 console.log('passed!')
-                $('.result').prepend('<p>ああああ：' + response.a + '</p>');
-                $('.result').prepend('<p>いいいい：' + response.b + '</p>');
-                $('.result').prepend('<p>こんにちは　is ：' + response.c + '</p>');
+                $('.result').prepend(response.sentence);
             });
         });
         //######################################
 
         var canvas = document.getElementById("myCanvas");
         var ctx = canvas.getContext("2d");
-        var idx = 1;
+        var idx = 0;
         var x = parseInt(canvas.width/3);
         var y = parseInt(canvas.height/2);
-        var char = ''
+        var char = '';
         var pre_x = x;
         var pre_y = y;
         var pre_idx = idx;
@@ -62,7 +61,7 @@
         var move = 80;
         var near = 18;
         var far = 50;
-        var charwrite_flag = 0
+        var charwrite_flag = 0;
         var fontsize = 26
         var arrow_mode = 0;
         var max_arrow_mode = 2; 
@@ -71,11 +70,14 @@
         var arrow_G = 200
         var arrow_B = 0
         var mode = 0;
-        var seq_list = []
-        var seq_cluster = []
-        var nodes = {}
+        var direction;
+        var seq_list = [];
+        var seq_cluster = [];
+        var direction_list = [];
+        var direction_cluster = [];
+        var nodes = {};
         var pre_mode = 0;
-        var Pressed = [false, false, false, false]
+        var Pressed = [false, false, false, false];
         var commandable = true;
         const _sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         var arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
@@ -87,77 +89,6 @@
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
 
-        function drawBall(x,y) {
-            ctx.beginPath();
-            ctx.arc(x, y, 6, 0, Math.PI*2);
-            ctx.fillStyle = "#0095DD";
-            ctx.fill();
-            ctx.closePath();
-        }
-
-        function draw_list_components(seq_list){
-            if (seq_list.length!=0){
-                    var x_ = nodes[seq_list[0]][0];
-                    var y_ = nodes[seq_list[0]][1];
-                    var char_ = nodes[seq_list[0]][2];
-                    drawChar(x_, y_, char_, fontsize-3*char_.length);
-                }
-            for(j=0; j<seq_list.length-1; j++){
-                now_idx = seq_list[j]
-                nxt_idx = seq_list[j+1]
-                var pre_x = nodes[now_idx][0],
-                    pre_y = nodes[now_idx][1],
-                    pre_char = nodes[now_idx][2],
-                    now_x = nodes[nxt_idx][0],
-                    now_y = nodes[nxt_idx][1],
-                    now_char = nodes[nxt_idx][2];
-                drawChar(now_x, now_y, now_char, fontsize-3*now_char.length);
-                if (pre_char != ''){
-                    pre_x = pre_x*0.8+now_x*0.2;
-                    pre_y = pre_y*0.8+now_y*0.2;
-                }
-                if (now_char != ''){
-                    now_x = pre_x*0.2+now_x*0.8;
-                    now_y = pre_y*0.2+now_y*0.8;
-                }
-                ctx.beginPath();
-                ctx.moveTo(pre_x, pre_y);
-                ctx.lineTo(now_x, now_y);
-                ctx.strokeStyle = "black";
-                ctx.lineWidth = 1;
-                ctx.stroke();
-                ctx.closePath();
-            }
-        }
-
-        function draw_all_components() {
-            for (i=0; i< seq_cluster.length; i++){
-                draw_list_components(seq_cluster[i]);
-            }
-            draw_list_components(seq_list);
-        }
-
-        function drawChar(x, y, char, fontsize) {
-            var size = fontsize;
-            ctx.font =`${fontsize}px serif`;
-            var measure = ctx.measureText(char);
-            var width = measure.width;
-            var height = measure.actualBoundingBoxAscent + measure.actualBoundingBoxDescent;
-            ctx.beginPath();
-            ctx.fillStyle = "#000000";
-            ctx.fillText(char, x-width/2, y+height/2);
-            ctx.fill();
-            ctx.closePath();
-        }
-
-        function toggle_arrow(){
-            if (arrow_mode == 0){
-                drawArrow0();
-            }
-            else if (arrow_mode == 1){
-                drawArrow1();
-            }
-        }
 
         async function main(){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -166,7 +97,7 @@
                 drawChar(x, y, char, fontsize-3*char.length)
             }
             draw_all_components();
-            toggle_arrow()
+            draw_arrow()
             requestAnimationFrame(main);
             await _sleep(10);
         }

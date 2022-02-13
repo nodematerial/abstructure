@@ -6,6 +6,7 @@ function koushin0(){
     idx++;
     nodes[pre_idx] = [pre_x,pre_y,char];
     seq_list.push(pre_idx);
+    direction_list.push(direction);
     char = '';
 }
 

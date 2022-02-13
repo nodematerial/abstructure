@@ -7,26 +7,26 @@ function downmove8(e){
         }
     if(Pressed[0] == true && Pressed[1] == true){
         Pressed = [false, false, false, false];
-        return 0
+        return 4
     }
     if(Pressed[1] == true && Pressed[2] == true){
         Pressed = [false, false, false, false];
-        return 1
+        return 5
     }
     if(Pressed[2] == true && Pressed[3] == true){
         Pressed = [false, false, false, false];
-        return 2
+        return 6
     }
     if(Pressed[3] == true && Pressed[0] == true){
         Pressed = [false, false, false, false];
-        return 3
+        return 7
     }
     return null
 }
 
 function downmove12(e){
     var Arrows = ["ArrowRight","ArrowUp","ArrowLeft","ArrowDown"]
-    var numbers = [[10,5],[4,7],[6,9],[8,11]]
+    var numbers = [[14,9],[8,11],[10,13],[12,15]]
     for (i=0; i<4 ; i++){
         if(e.code  == Arrows[i]) {
             var a = (i+3)%4
@@ -51,7 +51,6 @@ function upmove(e){
     for (i=0; i<4 ; i++){
         if(e.code  == Arrows[i]) {
             if(Pressed[i] == true){
-                console.log(i);
                 Pressed[i] = false;
                 return i
             }
@@ -63,7 +62,7 @@ function upmove(e){
 function downmode0(e){
     var li = [[1,1],[-1,1],[-1,-1],[1,-1],[0.86,0.5],[0.5,0.86],[-0.5,0.86],
             [-0.86,0.5],[-0.86,-0.5],[-0.5,-0.86],[0.5,-0.86],[0.86,-0.5]]
-    var direction
+    direction
     if (arrow_mode == 0){
         direction = downmove8(e)
     }
@@ -72,9 +71,10 @@ function downmode0(e){
     }
     if (direction != null){
         koushin0();
-        x += move*li[direction][0];
-        y -= move*li[direction][1];
+        x += move*li[direction-4][0];
+        y -= move*li[direction-4][1];
         toggle_mode();
+        console.log(direction)
     }
 
     if(e.key == '/'){
@@ -89,7 +89,7 @@ function downmode0(e){
 }
 
 function upmode0(e){
-    var direction = upmove(e)
+    direction = upmove(e)
     if (direction == null){return}
 
     koushin0();
@@ -114,8 +114,8 @@ function downmode1(e){
     }
     if (direction != null){
         koushin1();
-        x += move*li[direction][0];
-        y -= move*li[direction][1];
+        x += move*li[direction-4][0];
+        y -= move*li[direction-4][1];
         toggle_mode();
     }
 
@@ -138,11 +138,10 @@ function downmode1(e){
         char = char.slice(0, -1);
         nodes[pre_idx][2] = char;
     }
-    console.log(charwrite_flag)
 }
 
 function upmode1(e){
-    var direction = upmove(e)
+    direction = upmove(e)
     if (direction == null){return}
 
     koushin1();
@@ -153,4 +152,30 @@ function upmode1(e){
         y += move*(direction-2);
     }
     toggle_mode();
+}
+
+function toggle_mode(){
+    //2つのモードを行き来する、切り替わる瞬間に特別な処理を入れる
+    mode = 0
+    for (let key in nodes) {
+        if (nodes[key][0] === x && nodes[key][1] === y){
+                mode = 1;
+                pre_idx = Number(key);
+            }
+    }
+    if (mode == 0){ // mode 0 追加モード
+        if (pre_mode == 1){
+            seq_list.push(pre_idx);
+            direction_list.push(direction);
+    }
+    }
+    else{// mode 1 移動モード
+        if (pre_mode == 0){
+            seq_cluster.push(seq_list);
+            seq_list = [];
+            direction_cluster.push(direction_list.slice(0, -1));
+            direction_list = [];
+        }
+    }
+    pre_mode = mode;
 }

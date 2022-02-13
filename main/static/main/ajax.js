@@ -14,10 +14,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-var csrftoken = getCookie('csrftoken');
-var supernova = [2,2,2];
-console.log(supernova)
-
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -29,26 +25,4 @@ $.ajaxSetup({
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
     }
-});
-
-$('#ajax-number').on('submit', function (e) {
-    e.preventDefault();
-
-    $.ajax({
-        'url': '{% url "main:ajax_number" %}',
-        'type': 'POST',
-        'data': {
-            'number1': $('#number1').val(),
-            'number2': $('#number2').val(),
-            'poyota': $('#the_poyota').val(),
-            'supernova': ['a', 'a', 'aa'],
-        },
-        'dataType': 'json'
-    })
-        .done(function (response) {
-            console.log('passed!')
-            $('.result').prepend('<p>引き算結果：' + response.minus + '</p>');
-            $('.result').prepend('<p>足し算結果：' + response.plus + '</p>');
-            $('.poyotaEX').prepend('<p>[THE POYOTA IS...  ' + response.poyota + ']</p>');
-        });
 });

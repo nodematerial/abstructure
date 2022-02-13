@@ -1,0 +1,11 @@
+\documentclass{article}
+\usepackage{chemfig}
+\begin{document}
+\begin{figure}[htbp]
+    \centering
+    \schemestart
+    \centering
+    \chemfig{C(-[2])(-[2]C)(-[2]C)-}
+    \schemestop
+\end{figure}
+\end{document}
