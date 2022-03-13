@@ -21,6 +21,7 @@ var seq_list = [];
 var seq_cluster = [];
 var direction_list = [];
 var direction_cluster = [];
+var chain_list = [];
 var nodes = {};
 var pre_mode = 0;
 var Pressed = [false, false, false, false];

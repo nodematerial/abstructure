@@ -1,36 +1,45 @@
-conv_table = {1:'[2]', 2:'[4]', 3:'[6]', 4:'[1]', 5:'[3]', 6:'[5]',
+import subprocess
+import os
+import sys
+from collections import defaultdict
+sys.path.append(os.path.abspath("tex/"))
+
+conv_table = {0:'[0]', 1:'[2]', 2:'[4]', 3:'[6]', 4:'[1]', 5:'[3]', 6:'[5]',
             7:'[7]',8:'[:30]', 9:'[:60]', 10:'[:120]', 11:'[:150]', 12:'[:-150]',
             13:'[:-120]', 14:'[:-60]', 15:'[:-30]'}
 
 def construct_chemfig_expression(nodes, seq_cluster, direct_cluster):
-    #print('=============================')
-    #print(nodes)
-    #print(seq_cluster)
-    #print('=============================')
-
-    indexes = set()
     chemlist = []
-    for (x, y, atom) in nodes.values():
+    di = defaultdict(list)
+
+    for (_, __, atom) in nodes.values():
         chemlist.append(atom)
 
     for i, seq in enumerate(seq_cluster):
-        if i == 0:
-            result = chemlist[0:len(seq)]
-            for j, direct in enumerate(direct_cluster[0]):
-                #chemfigでは右方向は指定しなくて良いため0は飛ばす
-                if direct == 0:
-                    continue
-                result[j+1] = conv_table[direct] + result[j+1] 
+        di[seq[0]].append((seq[1], i))
 
-            continue
-        for j, idx in enumerate(seq):
-            if j == 0:
-                bif = idx
-            else:
-                result[bif] += f'(-[2]{chemlist[idx]})'
-    
-    a = '-'.join(result)
-    return a
+    for i in reversed(range(len(chemlist))):
+        root = i
+        branches = []
+        directions = []
+        for br, idx in di[i]:
+            branch = ''
+            brseq = seq_cluster[idx]
+            brdir = direct_cluster[idx]
+            for j in range(len(brseq)):
+                if j == 0:
+                    pass
+                else:
+                    direction = conv_table[brdir[j-1]]
+                    atom = chemlist[brseq[j]]
+                    branch += f'-{direction}{atom}'
+            branches.append(branch)
+            directions.append(brdir)
+        #direction = conv_table[direct_cluster[i][0]]
+        for (branch, direction) in zip(branches, directions):
+            chemlist[root] +=  f'({branch})'
+    result = chemlist[0]
+    return result
 
 def make_sentence(chem):
     sentence = f'\
@@ -46,7 +55,10 @@ def make_sentence(chem):
 \end{{figure}}\n\
 \end{{document}}'
 
-    with open('a.txt', mode='w') as f:
+    with open('texfiles/a.tex', mode='w') as f:
         f.write(sentence)
 
     return sentence
+
+def run_lualatex():
+    subprocess.run(['bash makepdf.sh > /dev/null'], shell=True)

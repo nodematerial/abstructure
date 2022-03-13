@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +24,8 @@
                 <button type="submit" >送信</button>
             </form>
         <div class="result">
+            以下にTexでの表現が表示されます<br>
+            <span id = 'spn1'></span>
         </div>
     </div>
 
@@ -31,6 +34,12 @@
         var csrftoken = getCookie('csrftoken');
         $('#ajax-number').on('submit', function(e) {
             e.preventDefault();
+            if (seq_list.length > 0){
+                koushin0()
+                seq_cluster.push(seq_list);
+                direction_cluster.push(direction_list.slice(0, -1));
+            }
+            console.log(seq_cluster)
             $.ajax({
                 'url': '{% url "main:ajax_number" %}',
                 'type': 'POST',
@@ -44,8 +53,21 @@
             })
             .done(function(response){
                 console.log('passed!')
-                $('.result').prepend(response.sentence);
+                var sentence = response.sentence
+                $('#spn1').replaceWith("<span id = 'spn1'>" + response.sentence.replace(/\r?\n/g, '<br>') + "</span>");
+                var a = document.createElement("a");
+
+                document.body.appendChild(a);
+                a.style = "display: none";
+                a.href = "{% static 'main/result.jpg' %}";
+                a.download = "result.pdf";
+                a.click();
+            })
+            .fail(function(response){
+                console.log('failed!')
+                //$('.result').prepend(response.sentence);
             });
+            
         });
         //######################################
 
