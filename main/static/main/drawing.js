@@ -7,11 +7,6 @@ function drawBall(x,y) {
 }
 
 function draw_list_components(seq_list){
-    if (seq_list.length!=0){
-            var x_ = nodes[seq_list[0]][0];
-            var y_ = nodes[seq_list[0]][1];
-            var char_ = nodes[seq_list[0]][2];
-        }
     for(j=0; j<seq_list.length-1; j++){
         now_idx = seq_list[j]
         nxt_idx = seq_list[j+1]
@@ -63,8 +58,14 @@ function draw_all_components() {
     }
     for (i=0; i< seq_cluster.length; i++){
         draw_list_components(seq_cluster[i]);
+        draw_number(seq_cluster[i])
     }
     draw_list_components(seq_list);
+    for (i=0; i< chain_list.length; i++){
+        draw_list_components(chain_list[i]);
+    }
+    draw_number(seq_list)
+    draw_chain_number()
 }
 
 function drawChar(x, y, char, fontsize) {
@@ -87,4 +88,29 @@ function draw_arrow(){
     else if (arrow_mode == 1){
         drawArrow1();
     }
+}
+
+function draw_number(seq_list){
+    if (chain_mode == 1){
+        for(j=1; j<seq_list.length; j++){
+            now_idx = seq_list[j]
+            nxt_idx = seq_list[j+1]
+            var now_x = nodes[now_idx][0],
+                now_y = nodes[now_idx][1];
+            drawChar(now_x-8, now_y-10, now_idx, 12);
+        }
+    }
+}
+
+function draw_chain_number(){
+    if (chain_mode == 1){
+        drawChar(nodes[0][0]-8, nodes[0][1]-10, 0, 12);
+        drawChar(100, canvas.height-30 , 'Chain Mode', 30)
+        drawChar(80, 30, chain_number, 20)
+    }
+}
+
+function draw_structure(chara, x, y){
+    ctx.drawImage(chara, x, y);
+    draw_points(x, y);
 }

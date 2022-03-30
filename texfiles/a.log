@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.13.2 (TeX Live 2021)  (format=lualatex 2022.2.14)  14 MAR 2022 00:00
+This is LuaHBTeX, Version 1.13.2 (TeX Live 2021)  (format=lualatex 2022.2.14)  30 MAR 2022 17:43
  restricted system commands enabled.
 **a.tex
 (./a.tex
@@ -481,22 +481,22 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 )
 
 Here is how much of LuaTeX's memory you used:
- 13566 strings out of 477802
+ 13348 strings out of 477802
  100000,662416 words of node,token memory allocated
  413 words of node memory still in use:
    3 hlist, 1 vlist, 1 rule, 2 glue, 3 kern, 1 glyph, 5 attribute, 48 glue_spec,
  5 attribute_list, 2 write nodes
-   avail lists: 1:4,2:2444,3:989,4:14,5:38,6:2,7:1468,8:7,9:758,11:1,12:1
- 33824 multiletter control sequences out of 65536+600000
+   avail lists: 2:875,3:369,4:14,5:36,6:2,7:538,8:8,9:300,10:1
+ 33606 multiletter control sequences out of 65536+600000
  25 fonts using 1345055 bytes
- 115i,14n,111p,414b,1878s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 115i,13n,111p,414b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2021/texmf-dist/fonts/opentype/public/lm/lmroman10-regular.o
 tf></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb>
+Output written on a.pdf (1 page, 18508 bytes).
 
-Output written on a.pdf (1 page, 11638 bytes).
-
-PDF statistics: 22 PDF objects out of 1000 (max. 8388607)
- 14 compressed objects within 1 object stream
+PDF statistics: 26 PDF objects out of 1000 (max. 8388607)
+ 17 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 131072)
  16 words of extra memory for PDF output out of 10000 (max. 100000000)
 

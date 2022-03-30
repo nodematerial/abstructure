@@ -8,7 +8,7 @@ conv_table = {0:'[0]', 1:'[2]', 2:'[4]', 3:'[6]', 4:'[1]', 5:'[3]', 6:'[5]',
             7:'[7]',8:'[:30]', 9:'[:60]', 10:'[:120]', 11:'[:150]', 12:'[:-150]',
             13:'[:-120]', 14:'[:-60]', 15:'[:-30]'}
 
-def construct_chemfig_expression(nodes, seq_cluster, direct_cluster):
+def construct_chemfig_expression(nodes, seq_cluster, direct_cluster, chain_list):
     chemlist = []
     di = defaultdict(list)
 
@@ -17,6 +17,11 @@ def construct_chemfig_expression(nodes, seq_cluster, direct_cluster):
 
     for i, seq in enumerate(seq_cluster):
         di[seq[0]].append((seq[1], i))
+
+    for i, chain in enumerate(chain_list):
+        chemlist[chain[0]] += f'?[{i}]'
+        chemlist[chain[1]] += f'?[{i}]'
+    print(chemlist)
 
     for i in reversed(range(len(chemlist))):
         root = i

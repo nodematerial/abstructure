@@ -14,6 +14,7 @@
     <script src="{% static 'main/ajax.js' %}"></script>
     <script src="{% static 'main/mode.js' %}"></script>
     <script src="{% static 'main/drawing.js' %}"></script>
+    <script src="{% static 'main/structure.js' %}"></script>
 
 </head>
 <body>
@@ -48,6 +49,7 @@
                     'nodes': JSON.stringify(nodes),
                     'seq_cluster': JSON.stringify(seq_cluster),
                     'direct_cluster': JSON.stringify(direction_cluster),
+                    'chain_list': JSON.stringify(chain_list),
                 },
                 'dataType': 'json'
             })
@@ -72,15 +74,22 @@
         //######################################
 
         var canvas = document.getElementById("myCanvas");
+        var benzene = document.getElementById("benzene");
         var ctx = canvas.getContext("2d");
         var x = parseInt(canvas.width/3);
         var y = parseInt(canvas.height/2);
+        const chara = new Image();
+        chara.src = "{% static 'main/images/benzene.png' %}";
 
         document.addEventListener("keydown", keyDownHandler, false);
         document.addEventListener("keyup", keyUpHandler, false);
-
+        document.addEventListener("mousedown", mouseDownHandler, false);
+        document.addEventListener("mousemove", mouseMoveHandler, false);
+        document.addEventListener("mouseup", mouseUpHandler, false);
+        
         async function main(){
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            draw_structure(chara, diff.x, diff.y);
             draw_all_components();
             requestAnimationFrame(main);
             await _sleep(20);
