@@ -6,42 +6,45 @@ function drawBall(x,y) {
     ctx.closePath();
 }
 
+function draw_line(from_idx, to_idx){
+    var from_x = nodes[from_idx][0],
+    from_y = nodes[from_idx][1],
+    from_char = nodes[from_idx][2],
+    to_x = nodes[to_idx][0],
+    to_y = nodes[to_idx][1],
+    to_char = nodes[to_idx][2];
+    if (from_char != '' && to_char != ''){
+        _x = from_x*0.8+to_x*0.2;
+        _y = from_y*0.8+to_y*0.2;
+        to_x = from_x*0.2+to_x*0.8;
+        to_y = from_y*0.2+to_y*0.8;
+        from_x = _x;
+        from_y = _y;
+    }
+    else if (from_char != ''){
+        from_x = from_x*0.8+to_x*0.2;
+        from_y = from_y*0.8+to_y*0.2;
+    }
+    else if (to_char != ''){
+        to_x = from_x*0.2+to_x*0.8;
+        to_y = from_y*0.2+to_y*0.8;
+    }
+    
+    ctx.beginPath();
+    ctx.moveTo(from_x, from_y);
+    ctx.lineTo(to_x, to_y);
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+}
+
 function draw_list_components(seq_list){
     for(j=0; j<seq_list.length-1; j++){
         now_idx = seq_list[j]
         nxt_idx = seq_list[j+1]
-        var pre_x = nodes[now_idx][0],
-            pre_y = nodes[now_idx][1],
-            pre_char = nodes[now_idx][2],
-            now_x = nodes[nxt_idx][0],
-            now_y = nodes[nxt_idx][1],
-            now_char = nodes[nxt_idx][2];
-        drawChar(now_x, now_y, now_char, fontsize-3*now_char.length);
-
-        if (pre_char != '' && now_char != ''){
-            _x = pre_x*0.8+now_x*0.2;
-            _y = pre_y*0.8+now_y*0.2;
-            now_x = pre_x*0.2+now_x*0.8;
-            now_y = pre_y*0.2+now_y*0.8;
-            pre_x = _x;
-            pre_y = _y;
-        }
-        else if (pre_char != ''){
-            pre_x = pre_x*0.8+now_x*0.2;
-            pre_y = pre_y*0.8+now_y*0.2;
-        }
-        else if (now_char != ''){
-            now_x = pre_x*0.2+now_x*0.8;
-            now_y = pre_y*0.2+now_y*0.8;
-        }
-        
-        ctx.beginPath();
-        ctx.moveTo(pre_x, pre_y);
-        ctx.lineTo(now_x, now_y);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.closePath();
+        drawChar(nodes[nxt_idx][0], nodes[nxt_idx][1], nodes[nxt_idx][2],
+                fontsize-3 * nodes[nxt_idx][2].length);
+        draw_line(now_idx, nxt_idx)
     }
 }
 
@@ -62,7 +65,7 @@ function draw_all_components() {
     }
     draw_list_components(seq_list);
     for (i=0; i< chain_list.length; i++){
-        draw_list_components(chain_list[i]);
+        draw_line(chain_list[i][0], chain_list[i][1]);
     }
     draw_number(seq_list)
     draw_chain_number()

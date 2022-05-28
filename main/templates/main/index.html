@@ -37,8 +37,7 @@
             e.preventDefault();
             if (seq_list.length > 0){
                 koushin0()
-                seq_cluster.push(seq_list);
-                direction_cluster.push(direction_list.slice(0, -1));
+                toggle_mode()
             }
             console.log(seq_cluster)
             $.ajax({
@@ -61,7 +60,7 @@
 
                 document.body.appendChild(a);
                 a.style = "display: none";
-                a.href = "{% static 'main/result.jpg' %}";
+                a.href = "{% static 'main/result.png' %}";
                 a.download = "result.pdf";
                 a.click();
             })

@@ -9,3 +9,4 @@ sudo apt install zip unzip
 sudo apt install python3-pip -y
 pip install django
 pip install matplotlib
+pip install django-environ

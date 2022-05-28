@@ -71,8 +71,8 @@ function downmode0(e) {
     }
     if (direction != null) {
         koushin0();
-        x += move * li[direction - 4][0];
-        y -= move * li[direction - 4][1];
+        x += parseInt(move * li[direction - 4][0]);
+        y -= parseInt(move * li[direction - 4][1]);
         toggle_mode();
         console.log(direction)
     }

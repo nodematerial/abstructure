@@ -1,4 +1,7 @@
 var isDragging = false;
+var point_a = -1;
+var point_b = -1;
+var structure_list = [];
 
 var idx = 0;
 var char = '';
@@ -9,7 +12,7 @@ var pre_x;
 var pre_y;
 var pre_idx = idx;
 var pre_char = char;
-var move = 80;
+var move = 60;
 var near = 18;
 var far = 50;
 var charwrite_flag = 0;

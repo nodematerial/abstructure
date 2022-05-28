@@ -1,8 +1,10 @@
 function draw_points(x, y){
-    var pointlist = [[0, 32], [0, 96], [56, 0], [56, 128], [112, 32], [112, 96]]
-    
+    var pointlist = [[0, 30], [0, 90], [53, 121], [106, 90], [106, 30], [54, 0]]
+    var i = 0;
+    var isConnected = false;
     pointlist.forEach(function(point){
         var flag = false
+        var j = 0;
         ctx.beginPath();
         Object.values(nodes).forEach(function(node){
             var nodex = node[0]
@@ -13,7 +15,11 @@ function draw_points(x, y){
             dist = Math.pow(nodex - pointx, 2) + Math.pow(nodey - pointy, 2);
             if (dist < 64){
                 flag = true;
+                isConnected = true;
+                point_a = i;
+                point_b = j;
             }
+            j ++;
         });
         if (flag == false){
             ctx.fillStyle = 'red';
@@ -23,5 +29,10 @@ function draw_points(x, y){
         }
         ctx.fill();
         ctx.closePath();
+        i++;
     });
+    if (isConnected == false){
+        point_a = -1;
+        point_b = -1;
+    }
 }
